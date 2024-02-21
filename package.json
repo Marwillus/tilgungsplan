@@ -1,0 +1,10 @@
+{
+  "name": "tilgungsplan",
+  "version": "1.0.0",
+  "description": "for s-com",
+  "scripts": {
+    "start": "docker compose up"
+  },
+  "author": "Marcus Will",
+  "license": "ISC"
+}

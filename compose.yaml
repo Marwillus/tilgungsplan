@@ -2,11 +2,11 @@ version: "3.9"
 
 services:
   frontend:
-    container_name: frontend
-    image: frontend
+    container_name: tp-frontend
+    image: tp-frontend
     build:
       context: ./frontend
-      dockerfile: frontend.dockerfile
+      dockerfile: dockerfile
     ports:
       - 3000:3000
     environment:
@@ -15,15 +15,10 @@ services:
     depends_on:
       - backend
   backend:
-    container_name: backend
-    image: backend
+    container_name: tp-backend
+    image: tp-backend
     build:
       context: ./backend
-      dockerfile: backend.dockerfile
+      dockerfile: dockerfile
     ports:
       - 4000:4000
-    environment:
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/postgres?schema=public
-
-  volumes:
-  pgdata: {}
