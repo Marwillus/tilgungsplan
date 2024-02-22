@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "for s-com",
   "scripts": {
-    "start": "docker compose up"
+    "start": "docker compose up -d",
+    "stop": "docker compose down"
   },
   "author": "Marcus Will",
   "license": "ISC"
