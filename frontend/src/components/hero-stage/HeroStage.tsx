@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 import { Box, Container } from '@mui/material';
 
-import s from './HeroStage.module.scss';
+import s from './style.module.scss';
 
 function HeroStage() {
   return (

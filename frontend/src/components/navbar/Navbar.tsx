@@ -1,6 +1,6 @@
 import { AppBar, IconButton, Toolbar, Typography } from '@mui/material';
 
-import s from './Navbar.module.scss';
+import s from './style.module.scss';
 
 function Navbar() {
   return (

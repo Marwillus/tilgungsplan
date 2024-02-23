@@ -2,7 +2,7 @@
 
 import { Container } from '@mui/material';
 
-import s from './HeroStage.module.scss';
+import s from './style.module.scss';
 
 function RepaymentResult() {
   return (

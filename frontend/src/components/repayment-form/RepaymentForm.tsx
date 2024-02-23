@@ -2,7 +2,7 @@
 
 
 
-import s from './HeroStage.module.scss';
+import s from './style.module.scss';
 
 function RepaymentForm() {
   return (
