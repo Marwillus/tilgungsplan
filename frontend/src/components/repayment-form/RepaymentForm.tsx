@@ -1,8 +1,8 @@
 import { useState } from 'react';
 
-import InfoIcon from '@mui/icons-material/Info';
-import { Button, Grid, IconButton, Slider, Stack, TextField, Typography } from '@mui/material';
+import { Button, Grid, Slider, Stack, TextField, Typography } from '@mui/material';
 
+import FormGroupHeader from './form-header/FormGroupHeader';
 import s from './style.module.scss';
 
 interface FormGroup {
@@ -62,20 +62,6 @@ function RepaymentForm() {
     // Handle form submission here
   };
 
-  // @TODO ADD INFO POPOVERHANDLING
-  // const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
-
-  // const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-  //   setAnchorEl(event.currentTarget);
-  // };
-
-  // const handleClose = () => {
-  //   setAnchorEl(null);
-  // };
-
-  // const open = Boolean(anchorEl);
-  // const id = open ? 'simple-popover' : undefined;
-
   return (
     <div className={s.container}>
       <Typography variant="h3" noWrap sx={{ mb: 4, mt: 2 }}>
@@ -86,33 +72,7 @@ function RepaymentForm() {
         <Stack>
           <Grid container spacing={2}>
             <Grid item xs={8}>
-              {/*
-              @TODO ADD INFO POPOVERHANDLING
-              <IconButton aria-describedby={"id"} onClick={handleClick}>
-                <InfoIcon />
-              </IconButton>
-              <Popover
-                id={"id"}
-                open={open}
-                anchorEl={anchorEl}
-                onClose={handleClose}
-                anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "left",
-                }}
-              >
-                <Typography sx={{ p: 2 }}>
-                  The content of the Popover.
-                </Typography>
-              </Popover> */}
-              <Stack direction={"row"}>
-                <IconButton size="small">
-                  <InfoIcon />
-                </IconButton>
-                <Typography variant="h5" sx={{ verticalAlign: "center" }}>
-                  Darlehensbetrag
-                </Typography>
-              </Stack>
+              <FormGroupHeader title={"Darlehensbeitrag"} />
               <Stack direction={"row"} spacing={2}>
                 <Slider
                   name="slider"
@@ -134,15 +94,7 @@ function RepaymentForm() {
             </Grid>
 
             <Grid item xs={4}>
-              <Stack direction={"row"}>
-                <IconButton size="small">
-                  <InfoIcon />
-                </IconButton>
-                <Typography variant="h5" sx={{ verticalAlign: "center" }}>
-                  Sollzinssatz
-                </Typography>
-              </Stack>
-
+              <FormGroupHeader title={"Sollzinssatz"} />
               <TextField
                 name="textInput"
                 label="Text Input"
@@ -155,14 +107,7 @@ function RepaymentForm() {
             </Grid>
           </Grid>
 
-          <Stack direction={"row"}>
-            <IconButton size="small">
-              <InfoIcon />
-            </IconButton>
-            <Typography variant="h5" sx={{ verticalAlign: "center" }}>
-              Tilgungssatz
-            </Typography>
-          </Stack>
+          <FormGroupHeader title={"Tilgungssatz"} />
           <Button variant="contained" color="primary">
             {formGroup3.button1}
           </Button>
@@ -170,14 +115,7 @@ function RepaymentForm() {
             {formGroup3.button2}
           </Button>
 
-          <Stack direction={"row"}>
-            <IconButton size="small">
-              <InfoIcon />
-            </IconButton>
-            <Typography variant="h5" sx={{ verticalAlign: "center" }}>
-            Zinsbindungsdauer
-            </Typography>
-          </Stack>
+          <FormGroupHeader title={"Zinsbindungsdauer"} />
           <Stack direction={"row"}>
             <Slider
               name="slider"
