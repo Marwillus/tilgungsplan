@@ -1,6 +1,8 @@
 import { useState } from 'react';
 
-import { Button, FormGroup, Grid, Slider, TextField, Typography } from '@mui/material';
+import {
+    Button, FormControl, FormControlLabel, Grid, Radio, RadioGroup, Slider, TextField, Typography
+} from '@mui/material';
 
 import FormGroupHeader from './form-header/FormGroupHeader';
 import s from './style.module.scss';
@@ -8,6 +10,7 @@ import s from './style.module.scss';
 interface FormData {
   loanContribution: number;
   interestRate: number;
+  repaymentType: string;
   repaymentRate: number;
   interestPeriod?: number;
 }
@@ -16,17 +19,25 @@ function RepaymentForm() {
   const [formData, setFormData] = useState<FormData>({
     loanContribution: 3000,
     interestRate: 2,
+  repaymentType: 'percent',
     repaymentRate: 100,
     interestPeriod: 0,
   });
 
   const handleInputChange = (value: number | string, key: string) => {
-    if (typeof value === 'string') {
-      Number(value)
+    if (typeof value === "string") {
+      Number(value);
     }
     setFormData((prevState) => ({
       ...prevState,
       [key]: value,
+    }));
+  };
+
+  const handleRadioChange = (value: string) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      repaymentType: value,
     }));
   };
 
@@ -44,7 +55,7 @@ function RepaymentForm() {
       </Typography>
 
       <form onSubmit={() => handleSubmit}>
-        <Grid container spacing={2}>
+        <Grid container spacing={3}>
           <Grid container item md={6} xs={12}>
             <Grid item xs={12}>
               <FormGroupHeader title={"Darlehensbeitrag"} />
@@ -81,40 +92,32 @@ function RepaymentForm() {
             />
           </Grid>
 
-          <Grid item xs={12}>
-            <FormGroup>
+          <Grid container item xs={12}>
+            <Grid item xs={12}>
               <FormGroupHeader title={"Tilgungssatz"} />
-              {/* <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={formData.option1}
-                    onChange={handleChangeCheckbox}
-                    name="option1"
-                    color="primary"
+            </Grid>
+            <Grid item xs={6}>
+              <FormControl>
+                <RadioGroup
+                  defaultValue="percent"
+                  name="repaymentRadio"
+                  value={formData.repaymentType}
+                  onChange={(event)=>handleRadioChange(event.target.value)}
+                >
+                  <FormControlLabel
+                    value="percent"
+                    control={<Radio />}
+                    label="Tilgungssatz"
                   />
-                }
-                label="Option 1"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={formData.option2}
-                    onChange={handleChangeCheckbox}
-                    name="option2"
-                    color="primary"
+                  <FormControlLabel
+                    value="cash"
+                    control={<Radio />}
+                    label="Monatliche Rate"
                   />
-                }
-                label="Option 2"
-              />
-              <TextField
-                label="Text Field"
-                name="textField"
-                value={formData.textFieldValue}
-                onChange={handleChangeTextField}
-                variant="outlined"
-                margin="normal"
-                disabled={!formData.option1 && !formData.option2}
-              /> */}
+                </RadioGroup>
+              </FormControl>
+            </Grid>
+            <Grid item xs={6}>
               <TextField
                 value={formData.interestRate}
                 onChange={(event) =>
@@ -122,14 +125,14 @@ function RepaymentForm() {
                 }
                 required
               />
-            </FormGroup>
+            </Grid>
           </Grid>
 
           <Grid container item xs={12}>
             <Grid item xs={12}>
               <FormGroupHeader title={"Zinsbindungsdauer"} />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={6}>
               <Slider
                 name="slider"
                 value={formData.interestPeriod}
@@ -137,6 +140,8 @@ function RepaymentForm() {
                   handleInputChange(value as number, "interestPeriod")
                 }
               />
+            </Grid>
+            <Grid item xs={6}>
               <TextField
                 value={formData.interestPeriod}
                 onChange={(event) =>
