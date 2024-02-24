@@ -1,64 +1,39 @@
 import { useState } from 'react';
 
-import { Button, Grid, Slider, Stack, TextField, Typography } from '@mui/material';
+import { Button, FormGroup, Grid, Slider, TextField, Typography } from '@mui/material';
 
 import FormGroupHeader from './form-header/FormGroupHeader';
 import s from './style.module.scss';
 
-interface FormGroup {
-  header: string;
-  slider?: number;
-  textInput: string;
-  button1?: string;
-  button2?: string;
+interface FormData {
+  loanContribution: number;
+  interestRate: number;
+  repaymentRate: number;
+  interestPeriod?: number;
 }
 
 function RepaymentForm() {
-  const [formGroup1, setFormGroup1] = useState<FormGroup>({
-    header: "",
-    slider: 50,
-    textInput: "",
+  const [formData, setFormData] = useState<FormData>({
+    loanContribution: 3000,
+    interestRate: 2,
+    repaymentRate: 100,
+    interestPeriod: 0,
   });
 
-  const [formGroup2, setFormGroup2] = useState<FormGroup>({
-    header: "",
-    textInput: "",
-  });
-
-  const [formGroup3, setFormGroup3] = useState<FormGroup>({
-    header: "",
-    button1: "Button 1",
-    button2: "Button 2",
-  });
-
-  const [formGroup4, setFormGroup4] = useState<FormGroup>({
-    header: "",
-    slider: 50,
-    textInput: "",
-  });
-
-  const handleInputChange = (
-    event: Event,
-    formGroup: FormGroup,
-    setFormGroup: FormGroup
-  ) => {
-    const { name, value } = event.target;
-    setFormGroup((prevState) => ({
+  const handleInputChange = (value: number | string, key: string) => {
+    if (typeof value === 'string') {
+      Number(value)
+    }
+    setFormData((prevState) => ({
       ...prevState,
-      [name]: value,
+      [key]: value,
     }));
   };
 
-  const handleSliderChange = (event: Event, formGroup, setFormGroup) => {
-    const value = event.target.value;
-    setFormGroup((prevState) => ({
-      ...prevState,
-      slider: value,
-    }));
-  };
-
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: Event) => {
+    console.log(formData);
     event.preventDefault();
+
     // Handle form submission here
   };
 
@@ -68,76 +43,115 @@ function RepaymentForm() {
         Tilgungsrechner
       </Typography>
 
-      <form onSubmit={handleSubmit}>
-        <Stack>
-          <Grid container spacing={2}>
-            <Grid item xs={8}>
+      <form onSubmit={() => handleSubmit}>
+        <Grid container spacing={2}>
+          <Grid container item md={6} xs={12}>
+            <Grid item xs={12}>
               <FormGroupHeader title={"Darlehensbeitrag"} />
-              <Stack direction={"row"} spacing={2}>
-                <Slider
-                  name="slider"
-                  value={formGroup1.slider}
-                  onChange={(event) =>
-                    handleSliderChange(event, formGroup1, setFormGroup1)
-                  }
-                />
-                <TextField
-                  name="textInput"
-                  label="Text Input"
-                  value={formGroup1.textInput}
-                  onChange={(event) =>
-                    handleInputChange(event, formGroup1, setFormGroup1)
-                  }
-                  required
-                />
-              </Stack>
             </Grid>
-
-            <Grid item xs={4}>
-              <FormGroupHeader title={"Sollzinssatz"} />
+            <Grid item xs={6}>
+              <Slider
+                min={0}
+                max={10000}
+                value={formData.loanContribution}
+                onChange={(event, value) =>
+                  handleInputChange(value as number, "loanContribution")
+                }
+              />
+            </Grid>
+            <Grid item xs={6}>
               <TextField
-                name="textInput"
-                label="Text Input"
-                value={formGroup2.textInput}
+                value={formData.loanContribution}
                 onChange={(event) =>
-                  handleInputChange(event, formGroup2, setFormGroup2)
+                  handleInputChange(event.target.value, "loanContribution")
                 }
                 required
               />
             </Grid>
           </Grid>
 
-          <FormGroupHeader title={"Tilgungssatz"} />
-          <Button variant="contained" color="primary">
-            {formGroup3.button1}
-          </Button>
-          <Button variant="contained" color="secondary">
-            {formGroup3.button2}
-          </Button>
-
-          <FormGroupHeader title={"Zinsbindungsdauer"} />
-          <Stack direction={"row"}>
-            <Slider
-              name="slider"
-              value={formGroup4.slider}
-              onChange={(event) =>
-                handleSliderChange(event, formGroup4, setFormGroup4)
-              }
-            />
+          <Grid item md={6} xs={12}>
+            <FormGroupHeader title={"Sollzinssatz"} />
             <TextField
-              name="textInput"
-              label="Text Input"
-              value={formGroup4.textInput}
+              value={formData.interestRate}
               onChange={(event) =>
-                handleInputChange(event, formGroup4, setFormGroup4)
+                handleInputChange(event.target.value, "interestRate")
               }
               required
             />
-          </Stack>
-          <Button type="submit" variant="contained" color="primary">
-            Submit
-          </Button>
-        </Stack>
+          </Grid>
+
+          <Grid item xs={12}>
+            <FormGroup>
+              <FormGroupHeader title={"Tilgungssatz"} />
+              {/* <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={formData.option1}
+                    onChange={handleChangeCheckbox}
+                    name="option1"
+                    color="primary"
+                  />
+                }
+                label="Option 1"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={formData.option2}
+                    onChange={handleChangeCheckbox}
+                    name="option2"
+                    color="primary"
+                  />
+                }
+                label="Option 2"
+              />
+              <TextField
+                label="Text Field"
+                name="textField"
+                value={formData.textFieldValue}
+                onChange={handleChangeTextField}
+                variant="outlined"
+                margin="normal"
+                disabled={!formData.option1 && !formData.option2}
+              /> */}
+              <TextField
+                value={formData.interestRate}
+                onChange={(event) =>
+                  handleInputChange(event.target.value, "repaymentRate")
+                }
+                required
+              />
+            </FormGroup>
+          </Grid>
+
+          <Grid container item xs={12}>
+            <Grid item xs={12}>
+              <FormGroupHeader title={"Zinsbindungsdauer"} />
+            </Grid>
+            <Grid item xs={12}>
+              <Slider
+                name="slider"
+                value={formData.interestPeriod}
+                onChange={(event, value) =>
+                  handleInputChange(value as number, "interestPeriod")
+                }
+              />
+              <TextField
+                value={formData.interestPeriod}
+                onChange={(event) =>
+                  handleInputChange(event.target.value, "interestPeriod")
+                }
+                required
+              />
+            </Grid>
+          </Grid>
+          <Grid container item xs={12}>
+            <Button type="submit" variant="contained" color="primary">
+              Submit
+            </Button>
+          </Grid>
+        </Grid>
       </form>
     </div>
   );

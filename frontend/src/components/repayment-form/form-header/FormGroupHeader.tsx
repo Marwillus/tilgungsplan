@@ -42,7 +42,7 @@ function FormGroupHeader({title}: FormGroupHeader) {
                 </Typography>
               </Popover> */}
       <Stack direction={"row"}>
-        <IconButton size="small">
+        <IconButton size="small" sx={{pl: 0}}>
           <InfoIcon />
         </IconButton>
         <Typography variant="h5" sx={{ verticalAlign: "center" }}>
