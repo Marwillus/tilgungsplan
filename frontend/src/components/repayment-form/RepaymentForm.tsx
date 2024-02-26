@@ -1,13 +1,18 @@
-import { useState } from 'react';
+import axios from 'axios';
+import { log } from 'console';
+import { FormEvent, useState } from 'react';
 
+import EuroIcon from '@mui/icons-material/Euro';
+import PercentIcon from '@mui/icons-material/Percent';
 import {
-    Button, FormControl, FormControlLabel, Grid, Radio, RadioGroup, Slider, TextField, Typography
+    Button, FormControl, FormControlLabel, Grid, InputAdornment, MenuItem, Radio, RadioGroup,
+    Select, Slider, TextField, Typography
 } from '@mui/material';
 
 import FormGroupHeader from './form-header/FormGroupHeader';
 import s from './style.module.scss';
 
-interface FormData {
+interface RepaymentFormData {
   loanContribution: number;
   interestRate: number;
   repaymentType: string;
@@ -16,12 +21,12 @@ interface FormData {
 }
 
 function RepaymentForm() {
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<RepaymentFormData>({
     loanContribution: 3000,
     interestRate: 2,
-  repaymentType: 'percent',
+    repaymentType: "cash",
     repaymentRate: 100,
-    interestPeriod: 0,
+    interestPeriod: 10,
   });
 
   const handleInputChange = (value: number | string, key: string) => {
@@ -41,11 +46,25 @@ function RepaymentForm() {
     }));
   };
 
-  const handleSubmit = (event: Event) => {
-    console.log(formData);
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    try {
+      // const response = await axios.post('/api/calculate-repayment', formData);
+      const response = await axios.post(
+        "http://localhost:4000/repayment",
+        formData
+      );
 
-    // Handle form submission here
+      if (response.status === 201) {
+        console.log("Calculation succeed");
+        console.log(response.data);
+      } else {
+        console.error("Failed to post form");
+      }
+    } catch (error) {
+      console.error("Error submitting form", error);
+      // Handle network errors
+    }
   };
 
   return (
@@ -54,16 +73,17 @@ function RepaymentForm() {
         Tilgungsrechner
       </Typography>
 
-      <form onSubmit={() => handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <Grid container spacing={3}>
-          <Grid container item md={6} xs={12}>
+          <Grid container item md={8} xs={12}>
             <Grid item xs={12}>
               <FormGroupHeader title={"Darlehensbeitrag"} />
             </Grid>
             <Grid item xs={6}>
               <Slider
-                min={0}
-                max={10000}
+                min={1000}
+                max={100000}
+                step={1000}
                 value={formData.loanContribution}
                 onChange={(event, value) =>
                   handleInputChange(value as number, "loanContribution")
@@ -77,19 +97,36 @@ function RepaymentForm() {
                   handleInputChange(event.target.value, "loanContribution")
                 }
                 required
+                type="number"
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="start">
+                      <EuroIcon />
+                    </InputAdornment>
+                  ),
+                  inputProps: {
+                    style: { textAlign: "center" },
+                  },
+                }}
               />
             </Grid>
           </Grid>
 
-          <Grid item md={6} xs={12}>
+          <Grid item md={4} xs={12}>
             <FormGroupHeader title={"Sollzinssatz"} />
-            <TextField
+            <Select
+              labelId="Zinnssatz Select"
               value={formData.interestRate}
               onChange={(event) =>
                 handleInputChange(event.target.value, "interestRate")
               }
-              required
-            />
+            >
+              {Array.from({ length: 10 }, (_value, index) => index + 1).map(
+                (index) => (
+                  <MenuItem value={index}>{index}%</MenuItem>
+                )
+              )}
+            </Select>
           </Grid>
 
           <Grid container item xs={12}>
@@ -102,7 +139,7 @@ function RepaymentForm() {
                   defaultValue="percent"
                   name="repaymentRadio"
                   value={formData.repaymentType}
-                  onChange={(event)=>handleRadioChange(event.target.value)}
+                  onChange={(event) => handleRadioChange(event.target.value)}
                 >
                   <FormControlLabel
                     value="percent"
@@ -119,11 +156,26 @@ function RepaymentForm() {
             </Grid>
             <Grid item xs={6}>
               <TextField
-                value={formData.interestRate}
+                value={formData.repaymentRate}
                 onChange={(event) =>
                   handleInputChange(event.target.value, "repaymentRate")
                 }
                 required
+                type="number"
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="start">
+                      {formData.repaymentType === "cash" ? (
+                        <EuroIcon />
+                      ) : (
+                        <PercentIcon />
+                      )}
+                    </InputAdornment>
+                  ),
+                  inputProps: {
+                    style: { textAlign: "center" },
+                  },
+                }}
               />
             </Grid>
           </Grid>
@@ -135,6 +187,8 @@ function RepaymentForm() {
             <Grid item xs={6}>
               <Slider
                 name="slider"
+                min={1}
+                max={40}
                 value={formData.interestPeriod}
                 onChange={(event, value) =>
                   handleInputChange(value as number, "interestPeriod")
@@ -148,6 +202,17 @@ function RepaymentForm() {
                   handleInputChange(event.target.value, "interestPeriod")
                 }
                 required
+                type="number"
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="start">
+                      Jahre
+                    </InputAdornment>
+                  ),
+                  inputProps: {
+                    style: { textAlign: "center" },
+                  },
+                }}
               />
             </Grid>
           </Grid>

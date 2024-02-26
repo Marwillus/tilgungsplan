@@ -1,6 +1,6 @@
 import { SyntheticEvent, useState } from 'react';
 
-import { Box, Tab, Tabs, Typography } from '@mui/material';
+import { Box, Tab, Tabs } from '@mui/material';
 
 import RepaymentResultTable from './result-table/RepaymentResultTable';
 import RepaymentSummary from './summary/RepaymentSummary';
@@ -24,7 +24,7 @@ function CustomTabPanel(props: TabPanelProps) {
     >
       {value === index && (
         <Box sx={{ p: 3, border: 1, borderColor: "divider", borderRadius: 1 }}>
-          <Typography>{children}</Typography>
+          {children}
         </Box>
       )}
     </div>
