@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  output: 'standalone',
+  output: "standalone",
   webpack: (config, _) => ({
     ...config,
     watchOptions: {
@@ -10,6 +10,7 @@ const nextConfig = {
       aggregateTimeout: 300,
     },
   }),
+  transpilePackages: ["@mui/x-charts"],
 };
 
 export default nextConfig;
