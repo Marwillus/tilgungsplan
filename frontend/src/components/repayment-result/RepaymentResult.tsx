@@ -2,6 +2,7 @@ import { SyntheticEvent, useState } from 'react';
 
 import { Box, Tab, Tabs, Typography } from '@mui/material';
 
+import RepaymentResultTable from './result-table/RepaymentResultTable';
 import RepaymentSummary from './summary/RepaymentSummary';
 
 interface TabPanelProps {
@@ -45,7 +46,7 @@ function RepaymentResult() {
   };
 
   return (
-    <Box sx={{ width: "100%" }}>
+    <Box sx={{ width: "100%", p:2,backgroundColor:'#fff' }}>
       <Box>
         <Tabs
           value={value}
@@ -61,7 +62,7 @@ function RepaymentResult() {
         <RepaymentSummary />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        Item Two
+        <RepaymentResultTable />
       </CustomTabPanel>
     </Box>
   );

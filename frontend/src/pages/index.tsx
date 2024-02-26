@@ -8,12 +8,10 @@ function Home() {
     <>
       <Navbar />
       {/* <HeroStage /> */}
-      <Box sx={{ py: 3 }}>
+      <Box sx={{ width: "100%", backgroundColor: "#eee" }}>
         <Container>
           <RepaymentForm />
         </Container>
-      </Box>
-      <Box sx={{ width: "100%", backgroundColor: "#eee", py: 3 }}>
         <Container>
           <RepaymentResult />
         </Container>

@@ -36,9 +36,10 @@ function RepaymentSummary() {
           ))}
         </List>
       </Grid>
+
       <Grid item sm={6} xs={12}>
         <Typography variant="h5">Ihre Jahreswerte</Typography>
-        <Slider></Slider>
+        <Slider valueLabelDisplay="auto" />
         <PieChart
           series={[
             {
