@@ -16,7 +16,7 @@ function RepaymentResultTable() {
   const { repaymentResult } = useRepaymentContext();
   return (
     <TableContainer>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+      <Table sx={{ width: '100%' }} aria-label="simple table">
         <TableHead>
           <TableRow>
             <TableCell>Jahr</TableCell>
@@ -36,7 +36,7 @@ function RepaymentResultTable() {
                 <TableCell component="th" scope="row">
                   {row.year}
                 </TableCell>
-                <TableCell align="right">{row.repaymentAmount}</TableCell>
+                <TableCell align="right">{row.repaymentRate}</TableCell>
                 <TableCell align="right">{row.interestAmount}</TableCell>
                 <TableCell align="right">{row.repaymentAmount}</TableCell>
                 <TableCell align="right">{row.remainingLoan}</TableCell>

@@ -12,7 +12,6 @@ import { useRepaymentContext } from '../../../../context/repayment-context';
 function RepaymentSummary() {
   const { repaymentResult } = useRepaymentContext();
   const [timelineSlider, setTimelineSlider] = useState(0);
-  console.log( repaymentResult?.repaymentSchedule[timelineSlider]);
 
   return (
     <>
@@ -124,14 +123,14 @@ function RepaymentSummary() {
                       id: 1,
                       value:
                         repaymentResult.repaymentSchedule[timelineSlider]
-                          .principalAmount,
+                          .repaymentAmountSum,
                       label: "Tilgung",
                     },
                     {
                       id: 2,
                       value:
                         repaymentResult.repaymentSchedule[timelineSlider]
-                          .interestAmount,
+                          .interestAmountSum,
                       label: "Zinsen",
                     },
                   ],

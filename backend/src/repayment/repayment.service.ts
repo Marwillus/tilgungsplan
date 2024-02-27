@@ -10,81 +10,92 @@ export class RepaymentService {
     const {
       loanContribution,
       interestRate,
-      repaymentRateInPercent,
       repaymentRateInCash,
       interestPeriod,
+      interestPeriodEnabled,
     } = formData;
 
     const repaymentSchedule: RepaymentSchedule[] = [];
 
     let remainingLoan = loanContribution;
+    let repaymentRate = repaymentRateInCash;
+    let repaymentAmount = 0;
+    let repaymentAmountSum = 0;
     let interestAmountSum = 0;
     let year = 1;
+    let remainingLoanAfterTime = 0;
 
-    if (interestPeriod) {
-      for (let index = 0; index < interestPeriod; index++) {
-        // Calculate interest for the current year
-        const interest = remainingLoan * (interestRate / 100);
+    // Calculate repayment plan within a period of time
+    for (let index = 0; index < interestPeriod; index++) {
+      const interestAmount = Math.ceil((remainingLoan * interestRate) / 100);
 
-        let repaymentAmount = repaymentRateInPercent;
-        // Ensure repayment amount does not exceed remaining loan
-        repaymentAmount = Math.min(repaymentAmount, remainingLoan);
-
-        // Deduct repayment amount from remaining loan
-        remainingLoan -= repaymentAmount;
-
-        interestAmountSum += interest;
-
-        // Add the details to repayment plan
-        repaymentSchedule.push({
-          year,
-          repaymentAmount,
-          interestAmount: interest,
-          principalAmount: repaymentAmount - interest,
-          remainingLoan,
-        });
-
-        // Move to the next year
-        year++;
-
-        if (remainingLoan < 0) return;
+      if (remainingLoan < repaymentRate) {
+        repaymentRate = remainingLoan + interestAmount;
       }
 
-      if (remainingLoan <= 0) {
-        const remainingInstances: RemainingInstances = {
-          remainingSum: remainingLoan,
-          amountPaid: loanContribution - remainingLoan,
-          amountInterest: interestAmountSum,
-          // @TODO add calculation for rest duration with same data basis
-          calculatedRestDuration: undefined,
-        };
-        return { initialData: formData, repaymentSchedule, remainingInstances };
-      }
+      repaymentAmount = repaymentRate - interestAmount;
 
-      while (remainingLoan > 0 || year > 100) {
-        remainingLoan = repaymentRateInCash * (interestPeriod - year);
-        const interest = remainingLoan * (interestRate / 100);
-        let repaymentAmount = repaymentRateInPercent;
-        // Ensure repayment amount does not exceed remaining loan
-        repaymentAmount = Math.min(repaymentAmount, remainingLoan);
+      remainingLoan -= repaymentAmount;
 
-        repaymentSchedule.push({
-          year,
-          repaymentAmount,
-          interestAmount: interest,
-          principalAmount: repaymentAmount - interest,
-          remainingLoan,
-        });
-        year++;
-      }
+      interestAmountSum += interestAmount;
+      repaymentAmountSum += repaymentRate;
 
-      return { initialData: formData, repaymentSchedule };
+      repaymentSchedule.push({
+        year,
+        interestAmount,
+        repaymentRate,
+        repaymentAmount,
+        remainingLoan,
+        interestAmountSum,
+        repaymentAmountSum,
+      });
+
+      year++;
     }
+    remainingLoanAfterTime = remainingLoan;
+
+    // Calculate repayment plan until the loan is fully repaid
+    // for now I added a max of 100 years to prevent infinitive loop
+    while (remainingLoan > 0 || year > 100) {
+      console.log('calculate end');
+      const interestAmount = Math.ceil((remainingLoan * interestRate) / 100);
+
+      if (remainingLoan < repaymentRate) {
+        repaymentRate = remainingLoan + interestAmount;
+      }
+
+      repaymentAmount = repaymentRate - interestAmount;
+
+      remainingLoan -= repaymentAmount;
+
+      if (!interestPeriodEnabled) {
+        interestAmountSum += interestAmount;
+        repaymentAmountSum += repaymentRate;
+
+        repaymentSchedule.push({
+          year,
+          interestAmount,
+          repaymentRate,
+          repaymentAmount,
+          remainingLoan,
+          interestAmountSum,
+          repaymentAmountSum,
+        });
+      }
+
+      year++;
+    }
+
+    const remainingInstances: RemainingInstances = {
+      remainingSum: remainingLoanAfterTime,
+      amountPaid: repaymentAmountSum,
+      amountInterest: interestAmountSum,
+      // @TODO add calculation for rest duration with same data basis
+      calculatedRestDuration: repaymentSchedule.at(-1)
+        ? repaymentSchedule.at(-1)!.year - year
+        : 0,
+    };
+
+    return { initialData: formData, repaymentSchedule, remainingInstances };
   }
 }
-
-// RS = Restschuld
-// T = Tilgungsrate
-// n = Tilgungsdauer
-// t = Jahr der zu berechnenden Restschuld
-// Die Formel lautet RS = T * (n – t).

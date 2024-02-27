@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { log } from 'console';
 import { FormEvent, useState } from 'react';
 
 import EuroIcon from '@mui/icons-material/Euro';
@@ -17,10 +16,10 @@ import { RepaymentFormData, RepaymentType } from './types';
 function RepaymentForm() {
   const [repaymentType, setRepaymentType] = useState<RepaymentType>("cash");
   const [formData, setFormData] = useState<RepaymentFormData>({
-    loanContribution: 3000,
+    loanContribution: 10000,
     interestRate: 2,
     repaymentRateInPercent: 1,
-    repaymentRateInCash: 100,
+    repaymentRateInCash: 1000,
     interestPeriodEnabled: true,
     interestPeriod: 10,
   });
@@ -47,6 +46,8 @@ function RepaymentForm() {
     try {
       // const response = await axios.post('/api/calculate-repayment', formData);
       setIsLoading(true);
+
+      // setRepaymentResult(calculateRepaymentPlan(formData));
       const response = await axios.post(
         "http://localhost:4000/repayment",
         formData
@@ -208,12 +209,12 @@ function RepaymentForm() {
                 <FormGroupHeader title={"Zinsbindungsdauer"} />
                 <Switch
                   value={formData.interestPeriodEnabled}
-                  onChange={(e, value) => {
+                  onChange={() =>
                     handleInputChange(
                       !formData.interestPeriodEnabled,
                       "interestPeriodEnabled"
-                    );
-                  }}
+                    )
+                  }
                 ></Switch>
               </Stack>
             </Grid>
