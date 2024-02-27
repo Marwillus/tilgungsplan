@@ -1,3 +1,4 @@
+//@TODO find a way to SPOT these types
 export interface RepaymentFormData {
     loanContribution: number;
     interestRate: number;
@@ -12,4 +13,9 @@ export interface RepaymentFormData {
     interestAmount: number;
     principalAmount: number;
     remainingLoan: number;
+  }
+
+  export interface RepaymentResult {
+    data: RepaymentFormData
+    repaymentSchedule: RepaymentSchedule[]
   }

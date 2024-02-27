@@ -1,12 +1,12 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
-import { RepaymentFormData, RepaymentSchedule } from './types';
+import { RepaymentFormData, RepaymentResult, RepaymentSchedule } from './types';
 
 @Injectable()
 export class RepaymentService {
-  private readonly logger = new Logger(RepaymentService.name);
+  // private readonly logger = new Logger(RepaymentService.name);
 
-  calculateRepaymentPlan(formData: RepaymentFormData): RepaymentSchedule[] {
+  calculateRepaymentPlan(formData: RepaymentFormData): RepaymentResult {
     const {
       loanContribution,
       interestRate,
@@ -53,8 +53,6 @@ export class RepaymentService {
       }
     }
 
-    this.logger.log(repaymentPlan);
-
-    return repaymentPlan;
+    return { data: formData, repaymentSchedule: repaymentPlan };
   }
 }

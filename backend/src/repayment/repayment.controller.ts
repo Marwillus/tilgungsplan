@@ -1,7 +1,7 @@
 import { Body, Controller, Post } from '@nestjs/common';
 
 import { RepaymentService } from './repayment.service';
-import { RepaymentFormData, RepaymentSchedule } from './types';
+import { RepaymentFormData, RepaymentResult } from './types';
 
 @Controller('repayment')
 export class RepaymentController {
@@ -10,7 +10,7 @@ export class RepaymentController {
   @Post()
   calculateRepaymentPlan(
     @Body() formData: RepaymentFormData,
-  ): RepaymentSchedule[] {
+  ): RepaymentResult {
     return this.repaymentService.calculateRepaymentPlan(formData);
   }
 }

@@ -3,6 +3,8 @@ import RepaymentForm from '@/components/repayment-form/RepaymentForm';
 import RepaymentResult from '@/components/repayment-result/RepaymentResult';
 import { Box, Container } from '@mui/material';
 
+import { RepaymentContextProvider } from '../../context/repayment-context';
+
 function Home() {
   return (
     <>
@@ -10,10 +12,10 @@ function Home() {
       {/* <HeroStage /> */}
       <Box sx={{ width: "100%", backgroundColor: "#eee" }}>
         <Container>
-          <RepaymentForm />
-        </Container>
-        <Container>
-          <RepaymentResult />
+          <RepaymentContextProvider>
+            <RepaymentForm />
+            <RepaymentResult />
+          </RepaymentContextProvider>
         </Container>
       </Box>
     </>

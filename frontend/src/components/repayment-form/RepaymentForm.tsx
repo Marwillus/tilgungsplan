@@ -9,25 +9,23 @@ import {
     Select, Slider, TextField, Typography
 } from '@mui/material';
 
+import { useRepaymentContext } from '../../../context/repayment-context';
 import FormGroupHeader from './form-header/FormGroupHeader';
 import s from './style.module.scss';
-
-interface RepaymentFormData {
-  loanContribution: number;
-  interestRate: number;
-  repaymentType: string;
-  repaymentRate: number;
-  interestPeriod?: number;
-}
+import { RepaymentFormData, RepaymentType } from './types';
 
 function RepaymentForm() {
+  const [repaymentType, setRepaymentType] = useState<RepaymentType>("cash");
   const [formData, setFormData] = useState<RepaymentFormData>({
     loanContribution: 3000,
     interestRate: 2,
-    repaymentType: "cash",
-    repaymentRate: 100,
+    repaymentRateInPercent: 1,
+    repaymentRateInCash: 100,
     interestPeriod: 10,
   });
+
+  // context just for show of reasons
+  const { setRepaymentResult, setIsLoading } = useRepaymentContext();
 
   const handleInputChange = (value: number | string, key: string) => {
     if (typeof value === "string") {
@@ -39,17 +37,15 @@ function RepaymentForm() {
     }));
   };
 
-  const handleRadioChange = (value: string) => {
-    setFormData((prevState) => ({
-      ...prevState,
-      repaymentType: value,
-    }));
+  const handleRadioChange = (value: RepaymentType) => {
+    setRepaymentType(value);
   };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
       // const response = await axios.post('/api/calculate-repayment', formData);
+      setIsLoading(true);
       const response = await axios.post(
         "http://localhost:4000/repayment",
         formData
@@ -58,6 +54,7 @@ function RepaymentForm() {
       if (response.status === 201) {
         console.log("Calculation succeed");
         console.log(response.data);
+        setRepaymentResult(response.data);
       } else {
         console.error("Failed to post form");
       }
@@ -65,6 +62,7 @@ function RepaymentForm() {
       console.error("Error submitting form", error);
       // Handle network errors
     }
+    setIsLoading(false);
   };
 
   return (
@@ -123,7 +121,9 @@ function RepaymentForm() {
             >
               {Array.from({ length: 10 }, (_value, index) => index + 1).map(
                 (index) => (
-                  <MenuItem value={index}>{index}%</MenuItem>
+                  <MenuItem key={"interestRateSelect-" + index} value={index}>
+                    {index}%
+                  </MenuItem>
                 )
               )}
             </Select>
@@ -136,10 +136,11 @@ function RepaymentForm() {
             <Grid item xs={6}>
               <FormControl>
                 <RadioGroup
-                  defaultValue="percent"
                   name="repaymentRadio"
-                  value={formData.repaymentType}
-                  onChange={(event) => handleRadioChange(event.target.value)}
+                  value={repaymentType}
+                  onChange={(event) =>
+                    handleRadioChange(event.target.value as RepaymentType)
+                  }
                 >
                   <FormControlLabel
                     value="percent"
@@ -155,28 +156,48 @@ function RepaymentForm() {
               </FormControl>
             </Grid>
             <Grid item xs={6}>
-              <TextField
-                value={formData.repaymentRate}
-                onChange={(event) =>
-                  handleInputChange(event.target.value, "repaymentRate")
-                }
-                required
-                type="number"
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="start">
-                      {formData.repaymentType === "cash" ? (
+              {repaymentType === "cash" ? (
+                <TextField
+                  value={formData.repaymentRateInCash}
+                  onChange={(event) =>
+                    handleInputChange(event.target.value, "repaymentRateInCash")
+                  }
+                  required
+                  type="number"
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="start">
                         <EuroIcon />
-                      ) : (
+                      </InputAdornment>
+                    ),
+                    inputProps: {
+                      style: { textAlign: "center" },
+                    },
+                  }}
+                />
+              ) : (
+                <TextField
+                  value={formData.repaymentRateInPercent}
+                  onChange={(event) =>
+                    handleInputChange(
+                      event.target.value,
+                      "repaymentRateInPercent"
+                    )
+                  }
+                  required
+                  type="number"
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="start">
                         <PercentIcon />
-                      )}
-                    </InputAdornment>
-                  ),
-                  inputProps: {
-                    style: { textAlign: "center" },
-                  },
-                }}
-              />
+                      </InputAdornment>
+                    ),
+                    inputProps: {
+                      style: { textAlign: "center" },
+                    },
+                  }}
+                />
+              )}
             </Grid>
           </Grid>
 
@@ -205,9 +226,7 @@ function RepaymentForm() {
                 type="number"
                 InputProps={{
                   endAdornment: (
-                    <InputAdornment position="start">
-                      Jahre
-                    </InputAdornment>
+                    <InputAdornment position="start">Jahre</InputAdornment>
                   ),
                   inputProps: {
                     style: { textAlign: "center" },
