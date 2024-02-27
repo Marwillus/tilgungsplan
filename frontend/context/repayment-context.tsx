@@ -27,7 +27,7 @@ export const RepaymentContextProvider = ({
   children,
 }: PropsWithChildren): ReactNode => {
   const [repaymentResult, setRepaymentResult] = useState<RepaymentResult | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
     <RepaymentContext.Provider value={{ repaymentResult, setRepaymentResult, isLoading, setIsLoading }}>

@@ -1,8 +1,10 @@
 import { SyntheticEvent, useState } from 'react';
 
-import { Box, Tab, Tabs } from '@mui/material';
+import { Box, CircularProgress, Tab, Tabs } from '@mui/material';
 
+import { useRepaymentContext } from '../../../context/repayment-context';
 import RepaymentResultTable from './result-table/RepaymentResultTable';
+import s from './style.module.scss';
 import RepaymentSummary from './summary/RepaymentSummary';
 
 interface TabPanelProps {
@@ -40,13 +42,36 @@ function a11yProps(index: number) {
 
 function RepaymentResult() {
   const [value, setValue] = useState(0);
+  const { repaymentResult, isLoading } = useRepaymentContext();
 
   const handleChange = (event: SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
   return (
-    <Box sx={{ width: "100%", p:2,backgroundColor:'#fff' }}>
+    <Box
+      sx={{
+        opacity: isLoading ? 0.2 : 1,
+        width: "100%",
+        p: 2,
+        backgroundColor: "#fff",
+      }}
+      position={"relative"}
+      height={repaymentResult ? "auto" : 0}
+      display={repaymentResult ? "block" : "none"}
+      className={s.container}
+    >
+      {isLoading && (
+        <CircularProgress
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+          }}
+        />
+      )}
+
       <Box>
         <Tabs
           value={value}

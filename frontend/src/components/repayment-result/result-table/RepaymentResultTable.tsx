@@ -1,5 +1,7 @@
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 
+import { useRepaymentContext } from '../../../../context/repayment-context';
+
 function createData(
   year: string,
   rate: number,
@@ -10,12 +12,8 @@ function createData(
   return { year, rate, interest, repayment, residualDebt };
 }
 
-const rows = [
-  createData("2024", 159, 6.0, 24, 4.0),
-  createData("2025", 237, 9.0, 37, 4.3),
-];
-
 function RepaymentResultTable() {
+  const { repaymentResult } = useRepaymentContext();
   return (
     <TableContainer>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -28,22 +26,24 @@ function RepaymentResultTable() {
             <TableCell align="right">Restschuld</TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>
-          {rows.map((row) => (
-            <TableRow
-              key={row.year}
-              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-            >
-              <TableCell component="th" scope="row">
-                {row.year}
-              </TableCell>
-              <TableCell align="right">{row.rate}</TableCell>
-              <TableCell align="right">{row.interest}</TableCell>
-              <TableCell align="right">{row.repayment}</TableCell>
-              <TableCell align="right">{row.residualDebt}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
+        {repaymentResult && (
+          <TableBody>
+            {repaymentResult.repaymentSchedule.map((row) => (
+              <TableRow
+                key={row.year}
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              >
+                <TableCell component="th" scope="row">
+                  {row.year}
+                </TableCell>
+                <TableCell align="right">{row.repaymentAmount}</TableCell>
+                <TableCell align="right">{row.interestAmount}</TableCell>
+                <TableCell align="right">{row.repaymentAmount}</TableCell>
+                <TableCell align="right">{row.remainingLoan}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        )}
       </Table>
     </TableContainer>
   );
