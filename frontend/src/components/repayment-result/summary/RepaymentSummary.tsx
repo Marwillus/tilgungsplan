@@ -31,7 +31,7 @@ function RepaymentSummary() {
                 <ListItemText primary={"Zinssatz"} />
                 <ListItemText
                   sx={{ textAlign: "end" }}
-                  primary={repaymentResult.data.interestRate + "%"}
+                  primary={repaymentResult.initialData.interestRate + "%"}
                 />
               </ListItem>
               <ListItem>
@@ -41,7 +41,7 @@ function RepaymentSummary() {
                 <ListItemText primary={"Jährliche Rate"} />
                 <ListItemText
                   sx={{ textAlign: "end" }}
-                  primary={repaymentResult.data.repaymentRateInCash + "€"}
+                  primary={repaymentResult.initialData.repaymentRateInCash + "€"}
                 />
               </ListItem>
               <ListItem>
@@ -51,13 +51,13 @@ function RepaymentSummary() {
                 <ListItemText primary={"Tilgungssatz"} />
                 <ListItemText
                   sx={{ textAlign: "end" }}
-                  primary={repaymentResult.data.repaymentRateInPercent + "%"}
+                  primary={repaymentResult.initialData.repaymentRateInPercent + "%"}
                 />
               </ListItem>
             </List>
             <Typography variant="h5">
               Ihre Eckdaten nach der Zinsbindung von{" "}
-              {repaymentResult.data.interestPeriod} Jahren
+              {repaymentResult.initialData.interestPeriod} Jahren
             </Typography>
             <List sx={{ width: "100%" }}>
               <ListItem>
@@ -95,7 +95,7 @@ function RepaymentSummary() {
                 <ListItemText primary={"Gezahlte Zinsen"} />
                 <ListItemText
                   sx={{ textAlign: "end" }}
-                  primary={repaymentResult.data.repaymentRateInPercent + "€"}
+                  primary={repaymentResult.initialData.repaymentRateInPercent + "€"}
                 />
               </ListItem>
             </List>

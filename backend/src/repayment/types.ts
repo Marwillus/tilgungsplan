@@ -2,9 +2,9 @@
 export interface RepaymentFormData {
     loanContribution: number;
     interestRate: number;
-    repaymentType: 'fixed' | 'percentage';
-    repaymentRate: number;
-    interestPeriod?: number;
+    repaymentRateInPercent: number;
+    interestPeriodEnabled: boolean;
+    interestPeriod: number;
   }
   
   export interface RepaymentSchedule {
@@ -15,7 +15,15 @@ export interface RepaymentFormData {
     remainingLoan: number;
   }
 
+  export interface RemainingInstances {
+    remainingSum: number
+    amountPaid: number
+    amountInterest: number
+    calculatedRestDuration?: number
+  };
+
   export interface RepaymentResult {
-    data: RepaymentFormData
+    initialData: RepaymentFormData
     repaymentSchedule: RepaymentSchedule[]
+    remainingInstances?: RemainingInstances
   }

@@ -6,7 +6,7 @@ import EuroIcon from '@mui/icons-material/Euro';
 import PercentIcon from '@mui/icons-material/Percent';
 import {
     Button, FormControl, FormControlLabel, Grid, InputAdornment, MenuItem, Radio, RadioGroup,
-    Select, Slider, TextField, Typography
+    Select, Slider, Stack, Switch, TextField, Typography
 } from '@mui/material';
 
 import { useRepaymentContext } from '../../../context/repayment-context';
@@ -21,13 +21,14 @@ function RepaymentForm() {
     interestRate: 2,
     repaymentRateInPercent: 1,
     repaymentRateInCash: 100,
+    interestPeriodEnabled: true,
     interestPeriod: 10,
   });
 
   // context just for show of reasons
   const { setRepaymentResult, setIsLoading } = useRepaymentContext();
 
-  const handleInputChange = (value: number | string, key: string) => {
+  const handleInputChange = (value: number | string | boolean, key: string) => {
     if (typeof value === "string") {
       Number(value);
     }
@@ -203,22 +204,34 @@ function RepaymentForm() {
 
           <Grid container item xs={12}>
             <Grid item xs={12}>
-              <FormGroupHeader title={"Zinsbindungsdauer"} />
+              <Stack direction={"row"}>
+                <FormGroupHeader title={"Zinsbindungsdauer"} />
+                <Switch
+                  value={formData.interestPeriodEnabled}
+                  onChange={(e, value) => {
+                    handleInputChange(
+                      !formData.interestPeriodEnabled,
+                      "interestPeriodEnabled"
+                    );
+                  }}
+                ></Switch>
+              </Stack>
             </Grid>
             <Grid item xs={6}>
               <Slider
                 name="slider"
                 min={1}
                 max={40}
-                value={formData.interestPeriod}
+                value={formData.interestPeriod as number}
                 onChange={(event, value) =>
                   handleInputChange(value as number, "interestPeriod")
                 }
+                disabled={formData.interestPeriodEnabled}
               />
             </Grid>
             <Grid item xs={6}>
               <TextField
-                value={formData.interestPeriod}
+                value={formData.interestPeriod ? formData.interestPeriod : "-"}
                 onChange={(event) =>
                   handleInputChange(event.target.value, "interestPeriod")
                 }
@@ -232,6 +245,7 @@ function RepaymentForm() {
                     style: { textAlign: "center" },
                   },
                 }}
+                disabled={formData.interestPeriodEnabled}
               />
             </Grid>
           </Grid>

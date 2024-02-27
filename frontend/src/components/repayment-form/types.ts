@@ -1,9 +1,11 @@
+//@TODO find a way to SPOT these types
 export interface RepaymentFormData {
   loanContribution: number;
   interestRate: number;
   repaymentRateInPercent: number;
   repaymentRateInCash: number;
-  interestPeriod?: number;
+  interestPeriodEnabled: boolean;
+  interestPeriod: number;
 }
 
 export interface RepaymentSchedule {
@@ -14,9 +16,17 @@ export interface RepaymentSchedule {
   remainingLoan: number;
 }
 
+export interface RemainingInstances {
+  remainingSum: number
+  amountPaid: number
+  amountInterest: number
+  calculatedRestDuration?: number
+};
+
 export interface RepaymentResult {
-  data: RepaymentFormData;
-  repaymentSchedule: RepaymentSchedule[];
+  initialData: RepaymentFormData
+  repaymentSchedule: RepaymentSchedule[]
+  remainingInstances?: RemainingInstances
 }
 
 export type RepaymentType = 'cash' | 'string'
