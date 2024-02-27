@@ -51,8 +51,7 @@ export const calculateRepaymentPlan = (
   remainingLoanAfterTime = remainingLoan
 
   // Calculate repayment plan until the loan is fully repaid
-  // for now I added a max of 100 years to prevent infinitive loop
-  while (remainingLoan > 0 || year > 100) {
+  while (remainingLoan > 0) {
     console.log(year);
     const interestAmount = Math.ceil((remainingLoan * interestRate) / 100);
 

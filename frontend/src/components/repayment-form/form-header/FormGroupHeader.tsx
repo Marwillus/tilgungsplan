@@ -9,7 +9,7 @@ interface FormGroupHeader {
 function FormGroupHeader({ title, infoText }: FormGroupHeader) {
   return (
     <Stack direction={"row"}>
-      {infoText && <TooltipButton infoText="testitest" />}
+      {infoText && <TooltipButton infoText={infoText} />}
       <Typography variant="h5" sx={{ verticalAlign: "center" }}>
         {title}
       </Typography>

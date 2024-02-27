@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { FormEvent, useState } from 'react';
 
 import EuroIcon from '@mui/icons-material/Euro';
@@ -9,6 +8,7 @@ import {
 } from '@mui/material';
 
 import { useRepaymentContext } from '../../../context/repayment-context';
+import { calculateRepaymentPlan } from './calculations';
 import FormGroupHeader from './form-header/FormGroupHeader';
 import s from './style.module.scss';
 import { RepaymentFormData, RepaymentType } from './types';
@@ -24,13 +24,13 @@ function RepaymentForm() {
     interestPeriod: 10,
   });
 
-  // context just for show of reasons
   const { setRepaymentResult, setIsLoading } = useRepaymentContext();
 
   const handleInputChange = (value: number | string | boolean, key: string) => {
     if (typeof value === "string") {
       Number(value);
     }
+
     setFormData((prevState) => ({
       ...prevState,
       [key]: value,
@@ -43,27 +43,27 @@ function RepaymentForm() {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    try {
-      // const response = await axios.post('/api/calculate-repayment', formData);
-      setIsLoading(true);
+    setRepaymentResult(calculateRepaymentPlan(formData));
+    // try {
+    // const response = await axios.post('/api/calculate-repayment', formData);
+    setIsLoading(true);
 
-      // setRepaymentResult(calculateRepaymentPlan(formData));
-      const response = await axios.post(
-        "http://localhost:4000/repayment",
-        formData
-      );
+    // const response = await axios.post(
+    //   "http://localhost:4000/repayment",
+    //   formData
+    // );
 
-      if (response.status === 201) {
-        console.log("Calculation succeed");
-        console.log(response.data);
-        setRepaymentResult(response.data);
-      } else {
-        console.error("Failed to post form");
-      }
-    } catch (error) {
-      console.error("Error submitting form", error);
-      // Handle network errors
-    }
+    //   if (response.status === 201) {
+    //     console.log("Calculation succeed");
+    //     console.log(response.data);
+    //     setRepaymentResult(response.data);
+    //   } else {
+    //     console.error("Failed to post form");
+    //   }
+    // } catch (error) {
+    //   console.error("Error submitting form", error);
+    //   // Handle network errors
+    // }
     setIsLoading(false);
   };
 
@@ -77,7 +77,7 @@ function RepaymentForm() {
         <Grid container spacing={3}>
           <Grid container item md={8} xs={12}>
             <Grid item xs={12}>
-              <FormGroupHeader title={"Darlehensbeitrag"} />
+              <FormGroupHeader title={"Darlehensbeitrag"} infoText='Some detail infos about Darlehensbeitrag'/>
             </Grid>
             <Grid item xs={6}>
               <Slider
@@ -113,7 +113,7 @@ function RepaymentForm() {
           </Grid>
 
           <Grid item md={4} xs={12}>
-            <FormGroupHeader title={"Sollzinssatz"} />
+            <FormGroupHeader title={"Sollzinssatz"} infoText='Some detail infos about Sollzinssatz'/>
             <Select
               labelId="Zinnssatz Select"
               value={formData.interestRate}
@@ -133,7 +133,7 @@ function RepaymentForm() {
 
           <Grid container item xs={12}>
             <Grid item xs={12}>
-              <FormGroupHeader title={"Tilgungssatz"} />
+              <FormGroupHeader title={"Tilgungssatz"} infoText='Some detail infos about Tilgungssatz'/>
             </Grid>
             <Grid item xs={6}>
               <FormControl>
@@ -152,7 +152,7 @@ function RepaymentForm() {
                   <FormControlLabel
                     value="cash"
                     control={<Radio />}
-                    label="Monatliche Rate"
+                    label="Jährliche Rate"
                   />
                 </RadioGroup>
               </FormControl>
@@ -206,15 +206,15 @@ function RepaymentForm() {
           <Grid container item xs={12}>
             <Grid item xs={12}>
               <Stack direction={"row"}>
-                <FormGroupHeader title={"Zinsbindungsdauer"} />
+                <FormGroupHeader title={"Zinsbindungsdauer"} infoText='Some detail infos about Zinsbindungsdauer'/>
                 <Switch
-                  value={formData.interestPeriodEnabled}
-                  onChange={() =>
+                  checked={formData.interestPeriodEnabled}
+                  onChange={(e) => {
                     handleInputChange(
                       !formData.interestPeriodEnabled,
                       "interestPeriodEnabled"
-                    )
-                  }
+                    );
+                  }}
                 ></Switch>
               </Stack>
             </Grid>
@@ -227,7 +227,7 @@ function RepaymentForm() {
                 onChange={(event, value) =>
                   handleInputChange(value as number, "interestPeriod")
                 }
-                disabled={formData.interestPeriodEnabled}
+                disabled={!formData.interestPeriodEnabled}
               />
             </Grid>
             <Grid item xs={6}>
@@ -246,7 +246,7 @@ function RepaymentForm() {
                     style: { textAlign: "center" },
                   },
                 }}
-                disabled={formData.interestPeriodEnabled}
+                disabled={!formData.interestPeriodEnabled}
               />
             </Grid>
           </Grid>
