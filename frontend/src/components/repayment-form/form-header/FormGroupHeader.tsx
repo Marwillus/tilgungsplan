@@ -1,55 +1,19 @@
-import InfoIcon from '@mui/icons-material/Info';
-import { IconButton, Stack, Typography } from '@mui/material';
+import TooltipButton from '@/components/tooltip-button/TooltipButton';
+import { Stack, Typography } from '@mui/material';
 
 interface FormGroupHeader {
-    title: string
+  title: string;
+  infoText?: string;
 }
 
-function FormGroupHeader({title}: FormGroupHeader) {
-  // @TODO ADD INFO POPOVERHANDLING
-  // const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
-
-  // const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-  //   setAnchorEl(event.currentTarget);
-  // };
-
-  // const handleClose = () => {
-  //   setAnchorEl(null);
-  // };
-
-  // const open = Boolean(anchorEl);
-  // const id = open ? 'simple-popover' : undefined;
-
+function FormGroupHeader({ title, infoText }: FormGroupHeader) {
   return (
-    <div>
-      {/*
-              @TODO ADD INFO POPOVERHANDLING
-              <IconButton aria-describedby={"id"} onClick={handleClick}>
-                <InfoIcon />
-              </IconButton>
-              <Popover
-                id={"id"}
-                open={open}
-                anchorEl={anchorEl}
-                onClose={handleClose}
-                anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "left",
-                }}
-              >
-                <Typography sx={{ p: 2 }}>
-                  The content of the Popover.
-                </Typography>
-              </Popover> */}
-      <Stack direction={"row"}>
-        <IconButton size="small" sx={{pl: 0}}>
-          <InfoIcon />
-        </IconButton>
-        <Typography variant="h5" sx={{ verticalAlign: "center" }}>
-          {title}
-        </Typography>
-      </Stack>
-    </div>
+    <Stack direction={"row"}>
+      {infoText && <TooltipButton infoText="testitest" />}
+      <Typography variant="h5" sx={{ verticalAlign: "center" }}>
+        {title}
+      </Typography>
+    </Stack>
   );
 }
 
