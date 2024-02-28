@@ -1,6 +1,6 @@
 # Tilgungsplan Rechner
 
-Testaufgabe für S-Comm
+Coding Challenge für S-Comm
 
 ## Userstory:
 
@@ -37,3 +37,26 @@ Als Sparkassenkunde möchte ich einen Tilgungsplan für Kredite berechnen könne
 - Die Implementierung kann in Teilen prototypenhaft erfolgen, soll aber wesentliche Programmier-/Architekturkonzepte erkennen lassen. Abkürzungen sollten erkennbar sein und gern erläutert werden.
 
 - Das Arbeitsergebnis muss inklusive dem Sourcecode komplett bereitgestellt werden
+
+
+
+## Dev-Note
+
+### Backend
+
+- erweitern um Validation
+- interfaces global speichern - SPOT
+
+### Frontend
+
+- nextJS vorteile hab ich fast gar nicht ausgespielt, ist quasi ne React App im NextJS Mantel
+- auto result refresh nicht eingebaut. Am besten mit delayed fetching bei handleInputChange
+- mobile view nicht optimal, optimierung möglich
+- wollte tilgung in % oder € ermöglichen, aufgrund von Zeitmangel gestrichen
+- repaymentContext vielleicht nicht unbedingt möglich, wäre mit anderer komponentenstruktur auch händelbar gewesen
+- theming (color, fonts..) fehlt
+- SEO, Accessibility und andere Themen nur angekratzt, war nicht im Scope
+
+### Docker
+
+- die erzeugten Images sind noch namenlos. 
