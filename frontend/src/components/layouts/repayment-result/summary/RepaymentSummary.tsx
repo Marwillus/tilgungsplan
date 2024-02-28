@@ -1,13 +1,13 @@
 import { useState } from 'react';
 
-import TooltipButton from '@/components/tooltip-button/TooltipButton';
+import TooltipButton from '@/components/ui/tooltip-button/TooltipButton';
 import { ArrowRight } from '@mui/icons-material';
 import {
     Box, Button, Grid, List, ListItem, ListItemIcon, ListItemText, Slider, Typography
 } from '@mui/material';
 import { PieChart } from '@mui/x-charts';
 
-import { useRepaymentContext } from '../../../../context/repayment-context';
+import { useRepaymentContext } from '../../../../../context/repayment-context';
 
 function RepaymentSummary() {
   const { repaymentResult } = useRepaymentContext();

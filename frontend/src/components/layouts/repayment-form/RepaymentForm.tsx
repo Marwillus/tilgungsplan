@@ -8,7 +8,7 @@ import {
     Select, Slider, Stack, Switch, TextField, Typography
 } from '@mui/material';
 
-import { useRepaymentContext } from '../../../context/repayment-context';
+import { useRepaymentContext } from '../../../../context/repayment-context';
 import FormGroupHeader from './form-header/FormGroupHeader';
 import s from './style.module.scss';
 import { RepaymentFormData, RepaymentType } from './types';

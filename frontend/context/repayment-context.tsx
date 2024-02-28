@@ -1,6 +1,6 @@
 import { createContext, PropsWithChildren, ReactNode, useContext, useState } from 'react';
 
-import { RepaymentResult } from '@/components/repayment-form/types';
+import { RepaymentResult } from '@/components/layouts/repayment-form/types';
 
 interface RepaymentContextValue {
   repaymentResult: RepaymentResult | null;

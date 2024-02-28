@@ -2,8 +2,8 @@ import { SyntheticEvent, useState } from 'react';
 
 import { Box, CircularProgress, Tab, Tabs } from '@mui/material';
 
-import { useRepaymentContext } from '../../../context/repayment-context';
-import RepaymentResultTable from './result-table/RepaymentResultTable';
+import { useRepaymentContext } from '../../../../context/repayment-context';
+import RepaymentResultTable from '../../ui/result-table/RepaymentResultTable';
 import s from './style.module.scss';
 import RepaymentSummary from './summary/RepaymentSummary';
 

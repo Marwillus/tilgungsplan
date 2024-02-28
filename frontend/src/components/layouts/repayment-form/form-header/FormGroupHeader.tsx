@@ -1,4 +1,4 @@
-import TooltipButton from '@/components/tooltip-button/TooltipButton';
+import TooltipButton from '@/components/ui/tooltip-button/TooltipButton';
 import { Stack, Typography } from '@mui/material';
 
 interface FormGroupHeader {
