@@ -16,8 +16,8 @@ function RepaymentSummary() {
   return (
     <>
       {repaymentResult && (
-        <Grid container gap={4}>
-          <Grid item sm={4} xs={12} minHeight={500}>
+        <Grid container spacing={4}>
+          <Grid item md={6} xs minHeight={500} gap={2}>
             <Typography variant="h5">
               Ihr Zinssatz und Ihre Monatsrate
             </Typography>
@@ -40,9 +40,7 @@ function RepaymentSummary() {
                 <ListItemText primary={"Jährliche Rate"} />
                 <ListItemText
                   sx={{ textAlign: "end" }}
-                  primary={
-                    repaymentResult.initialData.repaymentRate + "€"
-                  }
+                  primary={repaymentResult.initialData.repaymentRate + "€"}
                 />
               </ListItem>
               <ListItem>
@@ -130,14 +128,7 @@ function RepaymentSummary() {
             )}
           </Grid>
 
-          <Grid
-            item
-            sm={6}
-            xs={12}
-            display="flex"
-            flexDirection="column"
-            flexGrow={1}
-          >
+          <Grid item xs display="flex" flexDirection="column" gap={2}>
             <Typography variant="h5">Ihre Jahreswerte</Typography>
             <Slider
               valueLabelDisplay="on"
@@ -145,7 +136,7 @@ function RepaymentSummary() {
               onChange={(e, value) => setTimelineSlider(value as number)}
               min={0}
               max={repaymentResult.repaymentSchedule.length - 1}
-              sx={{ mt: 8, mx: 4 }}
+              sx={{ mt: 4, mx: 4 }}
               getAriaValueText={() =>
                 repaymentResult.repaymentSchedule[
                   timelineSlider
@@ -166,26 +157,27 @@ function RepaymentSummary() {
                       value:
                         repaymentResult.repaymentSchedule[timelineSlider]
                           .remainingLoan,
-                      label: `Restschuld - ${repaymentResult.repaymentSchedule[timelineSlider].remainingLoan}€`,
+                      label: `Restschuld`,
                     },
                     {
                       id: 1,
                       value:
                         repaymentResult.repaymentSchedule[timelineSlider]
                           .repaymentAmountSum,
-                      label: `Tilgung - ${repaymentResult.repaymentSchedule[timelineSlider].repaymentAmountSum}€`,
+                      label: `Tilgung`,
                     },
                     {
                       id: 2,
                       value:
                         repaymentResult.repaymentSchedule[timelineSlider]
                           .interestAmountSum,
-                      label: `Zinsen - ${repaymentResult.repaymentSchedule[timelineSlider].interestAmountSum}€`,
+                      label: `Zinsen`,
                     },
                   ],
+                  
                 },
-              ]}
-              width={550}
+              ]}                       
+              width={400}
               height={200}
             />
             <Typography>

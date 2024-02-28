@@ -25,7 +25,7 @@ function CustomTabPanel(props: TabPanelProps) {
       {...other}
     >
       {value === index && (
-        <Box sx={{ p: 3, border: 1, borderColor: "divider", borderRadius: 1 }}>
+        <Box sx={{ p: 3, mx:4, mb:8, border: 1, borderColor: "divider", borderRadius: 1 }}>
           {children}
         </Box>
       )}
@@ -53,7 +53,6 @@ function RepaymentResult() {
       sx={{
         opacity: isLoading ? 0.2 : 1,
         width: "100%",
-        p: 2,
         backgroundColor: "#fff",
       }}
       position={"relative"}
@@ -77,7 +76,7 @@ function RepaymentResult() {
           value={value}
           onChange={handleChange}
           aria-label="Ergebnis-Tabs"
-          sx={{ ml: 4 }}
+          sx={{ ml: 8 }}
         >
           <Tab label="Zusammenfassung" {...a11yProps(0)} />
           <Tab label="Tilgungsplan" {...a11yProps(1)} />

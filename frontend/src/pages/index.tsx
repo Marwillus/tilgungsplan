@@ -1,3 +1,4 @@
+import HeroStage from '@/components/sections/hero-stage/HeroStage';
 import Navbar from '@/components/sections/navbar/Navbar';
 import RepaymentCalculator from '@/components/sections/repayment-calculator/RepaymentCalculator';
 
@@ -5,7 +6,7 @@ function Home() {
   return (
     <>
       <Navbar />
-      {/* <HeroStage /> */}
+      <HeroStage />
       <RepaymentCalculator/>
     </>
   );

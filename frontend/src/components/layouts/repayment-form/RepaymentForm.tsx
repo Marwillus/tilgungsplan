@@ -66,185 +66,199 @@ function RepaymentForm() {
 
   return (
     <div className={s.container}>
-      <Typography variant="h3" noWrap sx={{ mb: 4, mt: 2 }}>
-        Tilgungsrechner
-      </Typography>
-
-      <form onSubmit={handleSubmit}>
-        <Grid container spacing={3}>
-          <Grid container item md={8} xs={12}>
-            <Grid item xs={12}>
-              <FormGroupHeader
-                title={"Darlehensbeitrag"}
-                infoText="Some detail infos about Darlehensbeitrag"
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <Slider
-                min={minContribution}
-                max={maxContribution}
-                step={1000}
-                value={formData.loanContribution}
-                onChange={(event, value) =>
-                  handleInputChange(value as number, "loanContribution")
-                }
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                value={formData.loanContribution}
-                onChange={(event) =>
-                  handleInputChange(event.target.value, "loanContribution")
-                }
-                required
-                type="number"
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="start">
-                      <EuroIcon />
-                    </InputAdornment>
-                  ),
-                  inputProps: {
-                    style: { textAlign: "center" },
-                  },
-                }}
-              />
-            </Grid>
-          </Grid>
-
-          <Grid item md={4} xs={12}>
-            <FormGroupHeader
-              title={"Sollzinssatz"}
-              infoText="Some detail infos about Sollzinssatz"
-            />
-            <Select
-              labelId="Zinnssatz Select"
-              value={formData.interestRate}
-              onChange={(event) =>
-                handleInputChange(event.target.value, "interestRate")
-              }
-            >
-              {Array.from({ length: 10 }, (_value, index) => index + 1).map(
-                (index) => (
-                  <MenuItem key={"interestRateSelect-" + index} value={index}>
-                    {index}%
-                  </MenuItem>
-                )
-              )}
-            </Select>
-          </Grid>
-
-          <Grid container item xs={12} columnGap={4}>
-            <Grid item xs={12}>
-              <FormGroupHeader
-                title={"Tilgungssatz"}
-                infoText="Some detail infos about Tilgungssatz"
-              />
-            </Grid>
-
-            <Grid item xs={"auto"}>
-              <Stack direction={"row"} flexGrow={1}>
-                <Box
-                  minWidth={"200px"}
-                  px={4}
-                  display={"flex"}
-                  alignItems={"center"}
-                >
-                  <Slider
-                    min={1000}
-                    max={formData.loanContribution / 2}
-                    step={1000}
-                    value={formData.repaymentRate}
-                    onChange={(event, value) =>
-                      handleInputChange(value as number, "repaymentRate")
-                    }
-                  />
-                  <TextField
-                    value={formData.repaymentRate}
-                    onChange={(event) => {
-                      handleInputChange(event.target.value, "repaymentRate");
-                    }}
-                    required
-                    type="number"
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="start">
-                          <EuroIcon />
-                        </InputAdornment>
-                      ),
-                      inputProps: {
-                        style: { textAlign: "center" },
-                        max: formData.loanContribution / 2,
-                      },
-                    }}
-                  />
-                </Box>
-              </Stack>
-            </Grid>
-          </Grid>
-
-          <Grid container item xs={12}>
-            <Grid item xs={12}>
-              <Stack direction={"row"}>
+      <Box paddingTop={8} paddingBottom={2} mx={8}>
+        <Typography variant="h3" noWrap fontSize={32} marginBottom={4}>
+          Tilgungsrechner
+        </Typography>
+        <form onSubmit={handleSubmit} className={s.form}>
+          <Grid container spacing={4} marginBottom={4}>
+            <Grid container item xs>
+              <Grid item xs={12}>
                 <FormGroupHeader
-                  title={"Zinsbindungsdauer"}
-                  infoText="Some detail infos about Zinsbindungsdauer"
+                  title={"Darlehensbeitrag"}
+                  infoText="Some detail infos about Darlehensbeitrag"
                 />
-                <Switch
-                  checked={formData.interestPeriodEnabled}
-                  onChange={(e) => {
-                    handleInputChange(
-                      !formData.interestPeriodEnabled,
-                      "interestPeriodEnabled"
-                    );
+              </Grid>
+                  
+              <Grid item xs={6} >
+                <Slider
+                  min={minContribution}
+                  max={maxContribution}
+                  step={1000}
+                  value={formData.loanContribution}
+                  onChange={(event, value) =>
+                    handleInputChange(value as number, "loanContribution")
+                  }
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                size='small'
+                value={formData.loanContribution}
+                  onChange={(event) =>
+                    handleInputChange(event.target.value, "loanContribution")
+                  }
+                  required
+                  type="number"
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="start">
+                        <EuroIcon />
+                      </InputAdornment>
+                    ),
+                    inputProps: {
+                      style: { textAlign: "center" },
+                    },
                   }}
-                ></Switch>
-              </Stack>
+                />
+              </Grid>
             </Grid>
-            <Grid item xs={6}>
-              <Slider
-                name="slider"
-                min={1}
-                max={40}
-                value={formData.interestPeriod as number}
-                onChange={(event, value) =>
-                  handleInputChange(value as number, "interestPeriod")
-                }
-                disabled={!formData.interestPeriodEnabled}
+
+            <Grid item md xs={12}>
+              <FormGroupHeader
+                title={"Sollzinssatz"}
+                infoText="Some detail infos about Sollzinssatz"
               />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                value={formData.interestPeriod ? formData.interestPeriod : "-"}
+              <Select
+                labelId="Zinnssatz Select"
+                size='small'
+                value={formData.interestRate}
                 onChange={(event) =>
-                  handleInputChange(event.target.value, "interestPeriod")
+                  handleInputChange(event.target.value, "interestRate")
                 }
-                required
-                type="number"
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="start">Jahre</InputAdornment>
-                  ),
-                  inputProps: {
-                    style: { textAlign: "center" },
-                  },
-                }}
-                disabled={!formData.interestPeriodEnabled}
-              />
+                sx={{backgroundColor:'background.paper'}}
+              >
+                {Array.from({ length: 10 }, (_value, index) => index + 1).map(
+                  (index) => (
+                    <MenuItem key={"interestRateSelect-" + index} value={index}>
+                      {index}%
+                    </MenuItem>
+                  )
+                )}
+              </Select>
+            </Grid>
+
+            <Grid container item xs={12} columnGap={4}>
+              <Grid item xs={12}>
+                <FormGroupHeader
+                  title={"Tilgungssatz"}
+                  infoText="Some detail infos about Tilgungssatz"
+                />
+              </Grid>
+
+              <Grid item xs={"auto"}>
+                <Stack direction={"row"} flexGrow={1}>
+                  <Box
+                    minWidth={"200px"}
+                    px={4}
+                    display={"flex"}
+                    alignItems={"center"}
+                  >
+                    <Slider
+                      min={1000}
+                      max={formData.loanContribution / 2}
+                      step={1000}
+                      value={formData.repaymentRate}
+                      onChange={(event, value) =>
+                        handleInputChange(value as number, "repaymentRate")
+                      }
+                    />
+                    <TextField
+                size='small'
+                value={formData.repaymentRate}
+                      onChange={(event) => {
+                        handleInputChange(event.target.value, "repaymentRate");
+                      }}
+                      required
+                      type="number"
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="start">
+                            <EuroIcon />
+                          </InputAdornment>
+                        ),
+                        inputProps: {
+                          style: { textAlign: "center" },
+                          max: formData.loanContribution / 2,
+                        },
+                      }}
+                    />
+                  </Box>
+                </Stack>
+              </Grid>
+            </Grid>
+
+            <Grid container item xs={12}>
+              <Grid item xs={12}>
+                <Stack direction={"row"}>
+                  <FormGroupHeader
+                    title={"Zinsbindungsdauer"}
+                    infoText="Some detail infos about Zinsbindungsdauer"
+                  />
+                  <Switch
+                    checked={formData.interestPeriodEnabled}
+                    onChange={(e) => {
+                      handleInputChange(
+                        !formData.interestPeriodEnabled,
+                        "interestPeriodEnabled"
+                      );
+                    }}
+                  ></Switch>
+                </Stack>
+              </Grid>
+              <Grid item xs={6}>
+                <Slider
+                  name="slider"
+                  min={1}
+                  max={40}
+                  value={formData.interestPeriod as number}
+                  onChange={(event, value) =>
+                    handleInputChange(value as number, "interestPeriod")
+                  }
+                  disabled={!formData.interestPeriodEnabled}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                size='small'
+                value={
+                    formData.interestPeriod ? formData.interestPeriod : "-"
+                  }
+                  onChange={(event) =>
+                    handleInputChange(event.target.value, "interestPeriod")
+                  }
+                  required
+                  type="number"
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="start">Jahre</InputAdornment>
+                    ),
+                    inputProps: {
+                      style: { textAlign: "center" },
+                    },
+                  }}
+                  disabled={!formData.interestPeriodEnabled}
+                />
+              </Grid>
+            </Grid>
+            <Grid container item xs={12}>
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                sx={{ px: 6 }}
+              >
+                Berechnen
+              </Button>
             </Grid>
           </Grid>
-          <Grid container item xs={12}>
-            <Button type="submit" variant="contained" color="primary">
-              Submit
-            </Button>
-          </Grid>
-        </Grid>
-      </form>
-      {error && (
-        <Alert sx={{ my: 2 }} severity="error">
-          {error}
-        </Alert>
-      )}
+        </form>
+        {error && (
+          <Alert sx={{ my: 2 }} severity="error">
+            {error}
+          </Alert>
+        )}
+      </Box>
     </div>
   );
 }
