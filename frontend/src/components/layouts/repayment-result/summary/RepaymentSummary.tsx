@@ -59,7 +59,7 @@ function RepaymentSummary() {
                 />
               </ListItem>
             </List>
-            {repaymentResult.remainingInstances && (
+            {repaymentResult.initialData.interestPeriodEnabled && (
               <>
                 <Typography variant="h5">
                   Ihre Eckdaten nach der Zinsbindung von{" "}
@@ -118,7 +118,7 @@ function RepaymentSummary() {
                     <b>
                       {
                         repaymentResult.remainingInstances
-                          .calculatedRestDuration
+                          ?.calculatedRestDuration
                       }{" "}
                       Jahre
                     </b>
@@ -174,9 +174,8 @@ function RepaymentSummary() {
                       label: `Zinsen`,
                     },
                   ],
-                  
                 },
-              ]}                       
+              ]}
               width={400}
               height={200}
             />
