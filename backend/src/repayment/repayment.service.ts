@@ -20,6 +20,8 @@ export class RepaymentService {
     let repayment = repaymentRate;
     let year = new Date().getFullYear();
     let remainingLoanAfterTime = 0;
+    let interestAmountSum = 0;
+    let repaymentAmountSum = 0;
 
     const calculateInterestAmount = (loan: number): number =>
       Math.ceil((loan * interestRate) / 100);
@@ -52,14 +54,17 @@ export class RepaymentService {
       repayment = updateRepaymentRate(loan, interestAmount);
       const repaymentAmount = processRepayment(interestAmount);
       remainingLoan -= repaymentAmount;
+      interestAmountSum += interestAmount
+      repaymentAmountSum += repaymentAmount
+
       return {
         year,
         interestAmount,
         repaymentRate,
         repaymentAmount,
         remainingLoan,
-        interestAmountSum: interestAmount,
-        repaymentAmountSum: repaymentAmount,
+        interestAmountSum,
+        repaymentAmountSum,
       };
     };
 
