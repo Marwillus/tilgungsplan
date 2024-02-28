@@ -41,7 +41,7 @@ function RepaymentSummary() {
                 <ListItemText
                   sx={{ textAlign: "end" }}
                   primary={
-                    repaymentResult.initialData.repaymentRateInCash + "€"
+                    repaymentResult.initialData.repaymentRate + "€"
                   }
                 />
               </ListItem>
@@ -53,7 +53,10 @@ function RepaymentSummary() {
                 <ListItemText
                   sx={{ textAlign: "end" }}
                   primary={
-                    repaymentResult.initialData.repaymentRateInPercent + "%"
+                    Math.ceil(
+                      repaymentResult.initialData.loanContribution /
+                        repaymentResult.initialData.repaymentRate
+                    ) + "%"
                   }
                 />
               </ListItem>
@@ -127,7 +130,14 @@ function RepaymentSummary() {
             )}
           </Grid>
 
-          <Grid item sm={6} xs={12} display='flex' flexDirection='column' flexGrow={1}>
+          <Grid
+            item
+            sm={6}
+            xs={12}
+            display="flex"
+            flexDirection="column"
+            flexGrow={1}
+          >
             <Typography variant="h5">Ihre Jahreswerte</Typography>
             <Slider
               valueLabelDisplay="on"

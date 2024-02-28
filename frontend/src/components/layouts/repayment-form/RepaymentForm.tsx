@@ -2,28 +2,28 @@ import axios from 'axios';
 import { FormEvent, useState } from 'react';
 
 import EuroIcon from '@mui/icons-material/Euro';
-import PercentIcon from '@mui/icons-material/Percent';
 import {
-    Alert, Button, FormControl, FormControlLabel, Grid, InputAdornment, MenuItem, Radio, RadioGroup,
-    Select, Slider, Stack, Switch, TextField, Typography
+    Alert, Box, Button, Grid, InputAdornment, MenuItem, Select, Slider, Stack, Switch, TextField,
+    Typography
 } from '@mui/material';
 
 import { useRepaymentContext } from '../../../../context/repayment-context';
-import FormGroupHeader from './form-header/FormGroupHeader';
+import FormGroupHeader from '../../ui/form-header/FormGroupHeader';
 import s from './style.module.scss';
-import { RepaymentFormData, RepaymentType } from './types';
+import { RepaymentFormData } from './types';
 
 function RepaymentForm() {
-  const [repaymentType, setRepaymentType] = useState<RepaymentType>("cash");
+  const [error, setError] = useState<string>("");
+
   const [formData, setFormData] = useState<RepaymentFormData>({
     loanContribution: 10000,
     interestRate: 2,
-    repaymentRateInPercent: 1,
-    repaymentRateInCash: 1000,
+    repaymentRate: 1000,
     interestPeriodEnabled: true,
     interestPeriod: 10,
   });
-  const [error, setError] = useState<string>("");
+  const minContribution = 1000;
+  const maxContribution = 100000;
 
   const { setRepaymentResult, setIsLoading } = useRepaymentContext();
 
@@ -38,17 +38,13 @@ function RepaymentForm() {
     }));
   };
 
-  const handleRadioChange = (value: RepaymentType) => {
-    setRepaymentType(value);
-  };
-
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // setRepaymentResult(calculateRepaymentPlan(formData));
     try {
       // const response = await axios.post('/api/calculate-repayment', formData);
       setIsLoading(true);
-      setError('')
+      setError("");
 
       const response = await axios.post(
         "http://localhost:4000/repayment",
@@ -85,8 +81,8 @@ function RepaymentForm() {
             </Grid>
             <Grid item xs={6}>
               <Slider
-                min={1000}
-                max={100000}
+                min={minContribution}
+                max={maxContribution}
                 step={1000}
                 value={formData.loanContribution}
                 onChange={(event, value) =>
@@ -138,78 +134,52 @@ function RepaymentForm() {
             </Select>
           </Grid>
 
-          <Grid container item xs={12}>
+          <Grid container item xs={12} columnGap={4}>
             <Grid item xs={12}>
               <FormGroupHeader
                 title={"Tilgungssatz"}
                 infoText="Some detail infos about Tilgungssatz"
               />
             </Grid>
-            <Grid item xs={6}>
-              <FormControl>
-                <RadioGroup
-                  name="repaymentRadio"
-                  value={repaymentType}
-                  onChange={(event) =>
-                    handleRadioChange(event.target.value as RepaymentType)
-                  }
+
+            <Grid item xs={"auto"}>
+              <Stack direction={"row"} flexGrow={1}>
+                <Box
+                  minWidth={"200px"}
+                  px={4}
+                  display={"flex"}
+                  alignItems={"center"}
                 >
-                  <FormControlLabel
-                    value="percent"
-                    control={<Radio />}
-                    label="Tilgungssatz"
+                  <Slider
+                    min={1000}
+                    max={formData.loanContribution / 2}
+                    step={1000}
+                    value={formData.repaymentRate}
+                    onChange={(event, value) =>
+                      handleInputChange(value as number, "repaymentRate")
+                    }
                   />
-                  <FormControlLabel
-                    value="cash"
-                    control={<Radio />}
-                    label="Jährliche Rate"
+                  <TextField
+                    value={formData.repaymentRate}
+                    onChange={(event) => {
+                      handleInputChange(event.target.value, "repaymentRate");
+                    }}
+                    required
+                    type="number"
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="start">
+                          <EuroIcon />
+                        </InputAdornment>
+                      ),
+                      inputProps: {
+                        style: { textAlign: "center" },
+                        max: formData.loanContribution / 2,
+                      },
+                    }}
                   />
-                </RadioGroup>
-              </FormControl>
-            </Grid>
-            <Grid item xs={6}>
-              {repaymentType === "cash" ? (
-                <TextField
-                  value={formData.repaymentRateInCash}
-                  onChange={(event) =>
-                    handleInputChange(event.target.value, "repaymentRateInCash")
-                  }
-                  required
-                  type="number"
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="start">
-                        <EuroIcon />
-                      </InputAdornment>
-                    ),
-                    inputProps: {
-                      style: { textAlign: "center" },
-                    },
-                  }}
-                />
-              ) : (
-                <TextField
-                  value={formData.repaymentRateInPercent}
-                  onChange={(event) =>
-                    handleInputChange(
-                      event.target.value,
-                      "repaymentRateInPercent"
-                    )
-                  }
-                  required
-                  type="number"
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="start">
-                        <PercentIcon />
-                      </InputAdornment>
-                    ),
-                    inputProps: {
-                      style: { textAlign: "center" },
-                    },
-                  }}
-                />
-              )}
+                </Box>
+              </Stack>
             </Grid>
           </Grid>
 
@@ -270,7 +240,11 @@ function RepaymentForm() {
           </Grid>
         </Grid>
       </form>
-      {error && <Alert sx={{my:2}} severity="error">{error}</Alert>}
+      {error && (
+        <Alert sx={{ my: 2 }} severity="error">
+          {error}
+        </Alert>
+      )}
     </div>
   );
 }

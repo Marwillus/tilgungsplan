@@ -10,14 +10,14 @@ export class RepaymentService {
     const {
       loanContribution,
       interestRate,
-      repaymentRateInCash,
+      repaymentRate,
       interestPeriod,
       interestPeriodEnabled,
     } = formData;
 
     const repaymentSchedule: RepaymentSchedule[] = [];
     let remainingLoan = loanContribution;
-    let repaymentRate = repaymentRateInCash;
+    let repayment = repaymentRate;
     let year = new Date().getFullYear();
     let remainingLoanAfterTime = 0;
 
@@ -49,7 +49,7 @@ export class RepaymentService {
 
     const calculateRepaymentForYear = (loan: number): RepaymentSchedule => {
       const interestAmount = calculateInterestAmount(loan);
-      repaymentRate = updateRepaymentRate(loan, interestAmount);
+      repayment = updateRepaymentRate(loan, interestAmount);
       const repaymentAmount = processRepayment(interestAmount);
       remainingLoan -= repaymentAmount;
       return {

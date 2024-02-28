@@ -2,8 +2,7 @@
 export interface RepaymentFormData {
   loanContribution: number;
   interestRate: number;
-  repaymentRateInPercent: number;
-  repaymentRateInCash: number;
+  repaymentRate: number;
   interestPeriodEnabled: boolean;
   interestPeriod: number;
 }
