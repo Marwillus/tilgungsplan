@@ -1,95 +1,72 @@
 import { RemainingInstances, RepaymentFormData, RepaymentResult, RepaymentSchedule } from './types';
 
-export const calculateRepaymentPlan = (
-  formData: RepaymentFormData
-): RepaymentResult => {
-  const {
-    loanContribution,
-    interestRate,
-    repaymentRateInCash,
-    interestPeriod,
-    interestPeriodEnabled,
-  } = formData;
+export const calculateRepaymentPlan = (formData: RepaymentFormData): RepaymentResult => {
+  const { loanContribution, interestRate, repaymentRateInCash, interestPeriod, interestPeriodEnabled } = formData;
 
   const repaymentSchedule: RepaymentSchedule[] = [];
-
   let remainingLoan = loanContribution;
   let repaymentRate = repaymentRateInCash;
-  let repaymentAmount = 0;
-  let repaymentAmountSum = 0;
-  let interestAmountSum = 0;
-  let year = 1;
-  let remainingLoanAfterTime = 0
+  let year = new Date().getFullYear();
+  let remainingLoanAfterTime = 0;
 
-  // Calculate repayment plan within a period of time
-  for (let index = 0; index < interestPeriod; index++) {
-    const interestAmount = Math.ceil((remainingLoan * interestRate) / 100);
+  const calculateInterestAmount = (loan: number): number => Math.ceil((loan * interestRate) / 100);
 
-    if (remainingLoan < repaymentRate) {
-      repaymentRate = remainingLoan + interestAmount;
+  const updateRepaymentRate = (loan: number, interestAmount: number): number => {
+    if (loan < repaymentRate) {
+      return loan + interestAmount;
     }
+    return repaymentRate;
+  };
 
-    repaymentAmount = repaymentRate - interestAmount;
+  const processRepayment = (interestAmount: number): number => {
+    if (repaymentRate < interestAmount) {
+      throw new Error('Repayment rate is less than interest amount');
+    }
+    return repaymentRate - interestAmount;
+  };
 
+  const calculateRepaymentForYear = (loan: number): RepaymentSchedule => {
+    const interestAmount = calculateInterestAmount(loan);
+    repaymentRate = updateRepaymentRate(loan, interestAmount);
+    const repaymentAmount = processRepayment(interestAmount);
     remainingLoan -= repaymentAmount;
-
-    interestAmountSum += interestAmount;
-    repaymentAmountSum += repaymentRate
-
-    repaymentSchedule.push({
+    return {
       year,
       interestAmount,
       repaymentRate,
       repaymentAmount,
       remainingLoan,
-      interestAmountSum,
-      repaymentAmountSum
-    });
+      interestAmountSum: interestAmount,
+      repaymentAmountSum: repaymentAmount,
+    };
+  };
 
-    year++;
-  }
-  remainingLoanAfterTime = remainingLoan
-
-  // Calculate repayment plan until the loan is fully repaid
-  while (remainingLoan > 0) {
-    console.log(year);
-    const interestAmount = Math.ceil((remainingLoan * interestRate) / 100);
-
-    if (remainingLoan < repaymentRate) {
-      repaymentRate = remainingLoan + interestAmount;
+  const processInterestPeriod = (): void => {
+    for (let index = 0; index < interestPeriod; index++) {
+      repaymentSchedule.push(calculateRepaymentForYear(remainingLoan));
+      year++;
     }
+    remainingLoanAfterTime = remainingLoan;
+  };
 
-    repaymentAmount = repaymentRate - interestAmount;
-
-    remainingLoan -= repaymentAmount;
-
-    if (!interestPeriodEnabled) {
-
-    interestAmountSum += interestAmount;
-    repaymentAmountSum += repaymentRate
-
-      repaymentSchedule.push({
-        year,
-        interestAmount,
-        repaymentRate,
-        repaymentAmount,
-        remainingLoan,
-        interestAmountSum,
-        repaymentAmountSum
-      });
+  const processRemainingLoan = (): void => {
+    while (remainingLoan > 0) {
+      repaymentSchedule.push(calculateRepaymentForYear(remainingLoan));
+      year++;
     }
+  };
 
-    year++;
+  if (interestPeriodEnabled) {
+    processInterestPeriod();
+  } else {
+    processRemainingLoan();
   }
 
   const remainingInstances: RemainingInstances = {
     remainingSum: remainingLoanAfterTime,
-    amountPaid: repaymentAmountSum,
-    amountInterest: interestAmountSum,
-    // @TODO add calculation for rest duration with same data basis
-    calculatedRestDuration: repaymentSchedule.at(-1)
-      ? repaymentSchedule.at(-1)!.year - year
-      : 0,
+    amountPaid: repaymentSchedule.reduce((acc, curr) => acc + curr.repaymentAmount, 0),
+    amountInterest: repaymentSchedule.reduce((acc, curr) => acc + curr.interestAmount, 0),
+    calculatedRestDuration: repaymentSchedule.length > 0 ? year - repaymentSchedule[repaymentSchedule.length - 1].year - 1 : 0,
   };
 
   return { initialData: formData, repaymentSchedule, remainingInstances };
