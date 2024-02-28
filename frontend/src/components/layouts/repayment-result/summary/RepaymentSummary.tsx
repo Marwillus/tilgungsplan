@@ -17,7 +17,7 @@ function RepaymentSummary() {
     <>
       {repaymentResult && (
         <Grid container spacing={4}>
-          <Grid item md={6} xs minHeight={500} gap={2}>
+          <Grid item lg={6} xs minHeight={500} gap={2}>
             <Typography variant="h5">
               Ihr Zinssatz und Ihre Monatsrate
             </Typography>
@@ -128,26 +128,29 @@ function RepaymentSummary() {
             )}
           </Grid>
 
-          <Grid item xs display="flex" flexDirection="column" gap={2}>
+          <Grid item lg={6} xs display="flex" flexDirection="column" gap={2}>
             <Typography variant="h5">Ihre Jahreswerte</Typography>
-            <Slider
-              valueLabelDisplay="on"
-              value={timelineSlider}
-              onChange={(e, value) => setTimelineSlider(value as number)}
-              min={0}
-              max={repaymentResult.repaymentSchedule.length - 1}
-              sx={{ mt: 4, mx: 4 }}
-              getAriaValueText={() =>
-                repaymentResult.repaymentSchedule[
-                  timelineSlider
-                ].year.toString()
-              }
-              valueLabelFormat={() =>
-                repaymentResult.repaymentSchedule[
-                  timelineSlider
-                ].year.toString()
-              }
-            />
+            <Box>
+              <Slider
+                valueLabelDisplay="on"
+                value={timelineSlider}
+                onChange={(e, value) => setTimelineSlider(value as number)}
+                min={0}
+                max={repaymentResult.repaymentSchedule.length - 1}
+                sx={{ mt: 4, mx: 4, width: 'auto', display: 'block' }}
+                getAriaValueText={() =>
+                  repaymentResult.repaymentSchedule[
+                    timelineSlider
+                  ].year.toString()
+                }
+                valueLabelFormat={() =>
+                  repaymentResult.repaymentSchedule[
+                    timelineSlider
+                  ].year.toString()
+                }
+              />
+            </Box>
+
             <PieChart
               series={[
                 {
@@ -176,7 +179,6 @@ function RepaymentSummary() {
                   ],
                 },
               ]}
-              width={400}
               height={200}
             />
             <Typography>

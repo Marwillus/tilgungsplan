@@ -13,6 +13,7 @@ function SliderInput({
   max,
   step,
   unit,
+  disabled,
   handleInputChange,
   ...rest
 }: ExtendedSliderProps) {
@@ -39,6 +40,7 @@ function SliderInput({
           step={step ? step : 1}
           value={value}
           onChange={handleInputChange}
+          disabled={disabled}
           {...rest}
         />
       </Box>
@@ -57,6 +59,7 @@ function SliderInput({
             max: max,
           },
         }}
+        disabled={disabled}
       />
     </Stack>
   );

@@ -156,6 +156,7 @@ function RepaymentForm() {
                   handleInputChange(event.target.value, "interestPeriod")
                 }
                 unit={<Typography>Jahre</Typography>}
+                disabled={!formData.interestPeriodEnabled}
               />
             </Grid>
 
